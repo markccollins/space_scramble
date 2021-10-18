@@ -1,7 +1,9 @@
 # space scramble
 # ludwig game jam 2021
 # written and designed by capnsquishy
+import os
 import pygame
+from pygame import Rect
 from pygame.math import Vector2
 
 
@@ -12,8 +14,26 @@ class GameState():
         self.views = ['title', 'menu', 'resource', 'ship']      # decides which view we are rendering and updating for
         self.view = 'title'
 
+        # title variables
+        self.title_option_position = 0
+
     def update(self, event):
-        pass
+        if self.view is 'title':
+            if event.key == pygame.K_DOWN:
+                if self.title_option_position < 2:
+                    self.title_option_position += 1
+            elif event.key == pygame.K_UP:
+                if self.title_option_position > 0:
+                    self.title_option_position += -1
+
+        if self.view is 'menu':
+            pass
+
+        if self.view is 'resource':
+            pass
+
+        if self.view is 'ship':
+            pass
 
 
 class Interface():
@@ -29,6 +49,10 @@ class Interface():
         window_size = self.game_state.world_size.elementwise() * self.cell_size
         self.window = pygame.display.set_mode((int(window_size.x), int(window_size.y)))
         pygame.display.set_caption('space scramble')
+
+        # load default textures
+        self.title_bg = pygame.image.load(os.path.join('sprites', 'title_screen.png'))
+        self.title_rocket = pygame.image.load(os.path.join('sprites', 'rocket.png'))
 
         # game loop settings
         self.clock = pygame.time.Clock()
@@ -48,7 +72,25 @@ class Interface():
 
     def render(self):
         self.window.fill((0, 0, 0))
-        pygame.draw.rect(self.window, (0, 0, 255), (120, 120, 400, 240))
+
+        if self.game_state.view is 'title':
+            # draw title background
+            self.window.blit(self.title_bg, (0, 0))
+
+            # draw rocket cursor
+            sprite_rect = Rect(0, 0, int(self.cell_size.x), int(self.cell_size.y))
+            self.window.blit(self.title_rocket, (int(5.5 * self.cell_size.x),
+                int((4.15 * self.cell_size.y) + self.game_state.title_option_position * 80)), sprite_rect)
+
+        if self.game_state.view is 'menu':
+            pass
+
+        if self.game_state.view is 'resource':
+            pass
+
+        if self.game_state.view is 'ship':
+            pass
+
         pygame.display.update()
 
     def run(self):
