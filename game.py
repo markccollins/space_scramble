@@ -53,6 +53,12 @@ class Interface():
         # load default textures
         self.title_bg = pygame.image.load(os.path.join('sprites', 'title_screen.png'))
         self.title_rocket = pygame.image.load(os.path.join('sprites', 'rocket.png'))
+        self.star_tick_1 = 0
+        self.star_tick_2 = 0
+        self.star_tick_3 = 0
+        self.title_stars_1 = pygame.image.load(os.path.join('sprites', 'stars_1.png'))
+        self.title_stars_2 = pygame.image.load(os.path.join('sprites', 'stars_2.png'))
+        self.title_stars_3 = pygame.image.load(os.path.join('sprites', 'stars_3.png'))
 
         # game loop settings
         self.clock = pygame.time.Clock()
@@ -68,14 +74,34 @@ class Interface():
                 pass
 
     def update(self):
-        pass
+        if self.game_state.view is 'title':
+            self.star_tick_1 += 1
+            self.star_tick_2 += 2
+            self.star_tick_3 += 3
+            if self.star_tick_1 > self.title_stars_1.get_height():
+                self.star_tick_1 = 0
+            if self.star_tick_2 > self.title_stars_2.get_height():
+                self.star_tick_2 = 0
+            if self.star_tick_3 > self.title_stars_3.get_height():
+                self.star_tick_3 = 0
 
     def render(self):
+        self.update()
         self.window.fill((0, 0, 0))
 
         if self.game_state.view is 'title':
             # draw title background
             self.window.blit(self.title_bg, (0, 0))
+
+            # draw star background
+            self.window.blit(self.title_stars_1, (0, self.star_tick_1))
+            self.window.blit(self.title_stars_1, (0, self.title_stars_1.get_height() * -1 + self.star_tick_1))
+
+            self.window.blit(self.title_stars_2, (0, int(self.star_tick_2)))
+            self.window.blit(self.title_stars_2, (0, int(self.title_stars_2.get_height() * -1 + self.star_tick_2)))
+
+            self.window.blit(self.title_stars_2, (0, int(self.star_tick_3 )))
+            self.window.blit(self.title_stars_2, (0, int(self.title_stars_3.get_height() * -1 + self.star_tick_3)))
 
             # draw rocket cursor
             sprite_rect = Rect(0, 0, int(self.cell_size.x), int(self.cell_size.y))
