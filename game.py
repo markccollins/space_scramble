@@ -35,15 +35,22 @@ class Interface:
         # initialize title view
         self.views['title'] = title_screen.TitleScreenView(self.window, self.cell_size)
 
+        # keep track of events for views to process
+        self.event_list = None
+
+    # collect events for processing, and ensure that we quit the program if needed
     def process_input(self):
-        for event in pygame.event.get():
+        self.event_list = pygame.event.get()
+        for event in self.event_list:
             if event.type == pygame.QUIT:
                 self.running = False
                 break
 
+    # send events to view for processing and rendering
     def update(self):
-        self.views[self.view].update()
+        self.views[self.view].update(self.event_list)
 
+    # main game loop to process inputs, update game state, and render screen
     def run(self):
         while self.running:
             self.process_input()
@@ -51,7 +58,9 @@ class Interface:
             self.clock.tick(60)
 
 
+# initializes the game interface and begins the main game loop
 interface = Interface()
 interface.run()
 
+# exits the game
 pygame.quit()
