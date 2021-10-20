@@ -9,6 +9,7 @@ class TitleScreenView:
         # initialize window variables
         self.window = window
         self.cell_size = cell_size
+        self.view = 'title'
 
         # load background textures
         self.title_bg = pygame.image.load(os.path.join('sprites', 'title_screen.png'))
@@ -27,6 +28,9 @@ class TitleScreenView:
         # title variables
         self.title_option_position = 0
 
+    def view_change(self):
+        return self.view
+
     # processes events for title screen
     def process_input(self, event_list):
         for event in event_list:
@@ -37,6 +41,14 @@ class TitleScreenView:
                 elif event.key == pygame.K_UP:
                     if self.title_option_position > 0:
                         self.title_option_position += -1
+                # select new view: new game, options, exit
+                elif event.key == pygame.K_z:
+                    if self.title_option_position == 0:
+                        self.view = 'resource_overview'
+                    elif self.title_option_position == 1:
+                        self.view = 'options'
+                    elif self.title_option_position == 2:
+                        self.view = 'exit'
 
     # updates game state for title screen
     def update(self, event_list):

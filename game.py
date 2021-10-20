@@ -5,7 +5,7 @@ import os
 import pygame
 from pygame import Rect
 from pygame.math import Vector2
-from views import title_screen
+from views import title_screen, resource_screen
 
 
 class Interface:
@@ -18,7 +18,8 @@ class Interface:
         self.views = {          # decides which view we are rendering and updating for
             'title': None,
             'menu': None,
-            'resource': None,
+            'resource_overview': None,
+            'options': None,
             'ship': None
         }
         self.view = 'title'
@@ -46,9 +47,21 @@ class Interface:
                 self.running = False
                 break
 
-    # send events to view for processing and rendering
+    # send events to view for processing and rendering, and check for change in view
     def update(self):
+        # update view
         self.views[self.view].update(self.event_list)
+
+        # check for change in view
+        self.view = self.views[self.view].view_change()
+        # initialize new view if changed
+        if not self.views[self.view]:
+            if self.view == 'resource_overview':
+                self.views[self.view] = resource_screen.ResourceScreenView(self.window, self.cell_size)
+
+        # exit if needed
+        if self.view == 'exit':
+            self.running = False
 
     # main game loop to process inputs, update game state, and render screen
     def run(self):
